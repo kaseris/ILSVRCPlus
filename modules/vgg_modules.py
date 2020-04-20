@@ -26,7 +26,7 @@ class VGGModules:
 		x = Activation('relu')(x)
 		x = BatchNormalization()(x)
 
-		x = MaxPool2D(pool_size=(2, 2))(x)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
 		return x
 
 	@staticmethod
