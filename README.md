@@ -17,10 +17,18 @@ This repository is dedicated to construct and train various deep architectures u
  * Report training and testing results
 
 ## To-do list
-- [x] VGGNet for MNIST
-- [ ] VGGNet for CIFAR-10
-- [ ] VGGNet for Tiny Imagenet
+- [ ] VGGNet
+	- [x] VGGNet for CIFAR-10
+	- [x] VGGNet for MNIST
+	- [ ] VGGNet for Tiny Imagenet
+
+- [ ] GoogLeNet
+	- [ ] GoogLeNet for CIFAR-10
+	- [ ] GoogLeNet for MNIST
+	- [ ] GoogLeNet for Tiny Imagenet
+	
 - [ ] Rank-1 and Rank-5 accuracy
+- [ ] Provide the notebooks
   
 ## References
 <a id="1">[1]</a>
