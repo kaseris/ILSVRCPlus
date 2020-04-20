@@ -16,7 +16,7 @@ This repository is dedicated to construct and train various deep architectures u
   
  * Report training and testing results
 
-## To-do list:
+## To-do list
 -[x] VGGNet for MNIST
 -[] VGGNet for CIFAR-10
 -[] VGGNet for Tiny Imagenet
