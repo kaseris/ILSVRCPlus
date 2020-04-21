@@ -41,7 +41,7 @@ class VGGNetCIFAR:
 		model = Model(inputs=inputs, outputs=x, name='CIFAR10_VGGNet')
 		return model
 
-	def train(self, learning_rate=1e-3, epochs=100, batch_size=128, summary=False):
+	def train(self, learning_rate=1e-2, epochs=100, batch_size=128, summary=False):
 		lr_drop=20
 		lr_decay = 1e-6
 		# Download the dataset
