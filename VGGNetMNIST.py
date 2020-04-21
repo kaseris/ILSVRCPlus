@@ -22,19 +22,26 @@ class VGGNetMNIST:
 
 	def build_model(self):
 		inputs_shape = self.input_shape
-		inputs = Input(shape=inputs_shape)
+		inputs = Input(shape=inputs_shape) #28x28
 
-		x = VGGModules.convModule(inputs, filters=64, kernel_size=(3, 3), dropout_rate=0.3)
-		x = VGGModules.convModule(x, filters=128, kernel_size=(3, 3), dropout_rate=0.3)
+		x = VGGModules.convModule2(inputs, filters=64, kernel_size=(3, 3)) #14x14
+		x = VGGModules.convModule2(x, filters=128, kernel_size=(3, 3)) # 7x7
+		x = VGGModules.convModule3(x, filters=256, kernel_size=(3, 3)) # 3x3
+		x = VGGModules.convModule3(x, filters=512, kernel_size=(3, 3))
 
-		x = Dropout(rate=0.5)(x)
 		x = Flatten()(x)
+		x = Dense(units=4096,
+			kernel_regularizer=keras.regularizers.l2(0.0005))(x)
+		x = Activation('relu')(x)
 
-		x = VGGModules.fcModule(x, 512, 0.5)
+		x = Dense(units=4096,
+			kernel_regularizer=keras.regularizers.l2(0.0005))(x)
+		x = Activation('relu')(x)
+
 		x = Dense(units=self.num_classes)(x)
 		x = Activation('softmax')(x)
 
-		model = Model(inputs=inputs, outputs=x, name='CIFAR10_VGGNet')
+		model = Model(inputs=inputs, outputs=x, name='MNIST_VGGNet')
 		return model
 
 	def train(self, learning_rate=1e-3, epochs=100, batch_size=128, summary=False):
@@ -48,32 +55,14 @@ class VGGNetMNIST:
 		trainX = trainX.astype(np.float32)
 		testX = testX.astype(np.float32)
 
-		mean = np.mean(trainX, axis=(0, 1, 2))
-		std = np.std(trainX, axis=(0, 1, 2))
-		trainX = (trainX - mean) / (std + 1e-7)
-		testX = (testX - mean) / (std + 1e-7)
+		trainX = trainX / 255.0
+		testX = testX / 255.0
 
 		trainX = np.expand_dims(trainX, axis=-1)
 		testX = np.expand_dims(testX, axis=-1)
 
-		trainY = keras.utils.to_categorical(trainY, 10)
-		testY = keras.utils.to_categorical(testY, 10)
-
-		datagen = ImageDataGenerator(featurewise_center=False,
-			samplewise_center=False,
-			featurewise_std_normalization=False,
-			samplewise_std_normalization=False,
-			zca_whitening=False,
-			rotation_range=15,
-			width_shift_range=0.1,
-			height_shift_range=0.1,
-			horizontal_flip=True,
-			vertical_flip=False)
-		datagen.fit(trainX)
-
-		def lr_scheduler(epoch):
-			return learning_rate * (0.5 ** (epoch // lr_drop))
-		callbacks = [LearningRateScheduler(lr_scheduler)]
+		trainY = keras.utils.to_categorical(trainY, self.num_classes)
+		testY = keras.utils.to_categorical(testY, self.num_classes)
 
 		print("[INFO]: Compiling model")
 		optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
@@ -86,11 +75,9 @@ class VGGNetMNIST:
 			self.model.summary()
 
 		print("[INFO]: Training model")
-		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
-			steps_per_epoch=trainX.shape[0] // batch_size,
+		history = self.model.fit(trainX, trainY,
 			epochs=epochs,
-			validation_data=(testX, testY),
-			callbacks=callbacks)
+			validation_data=(testX, testY))
 
 		self.model.save('MNIST_VGGNet.h5')
 		return history

@@ -2,7 +2,7 @@ import keras
 from keras.layers import Input, Flatten
 from keras.layers.core import Dropout, Activation, Dense
 from keras.models import Model
-from modules.vgg_modules import VGGModules
+from modules.vgg_modules import VGG_v2Modules
 from keras import backend as K
 
 from keras.datasets import cifar10
@@ -24,16 +24,16 @@ class VGGNetCIFAR:
 		inputs_shape = self.input_shape
 		inputs = Input(shape=inputs_shape)
 
-		x = VGGModules.convModule(inputs, filters=64, kernel_size=(3, 3), dropout_rate=0.3)
-		x = VGGModules.convModule(x, filters=128, kernel_size=(3, 3), dropout_rate=0.4)
-		x = VGGModules.convModule3(x, filters=256, kernel_size=(3, 3), dropout_rate=0.4)
-		x = VGGModules.convModule3(x, filters=512, kernel_size=(3, 3), dropout_rate=0.4)
-		x = VGGModules.convModule3(x, filters=512, kernel_size=(3, 3), dropout_rate=0.4)
+		x = VGG_v2Modules.convModule(inputs, filters=64, kernel_size=(3, 3), dropout_rate=0.3)
+		x = VGG_v2Modules.convModule(x, filters=128, kernel_size=(3, 3), dropout_rate=0.4)
+		x = VGG_v2Modules.convModule3(x, filters=256, kernel_size=(3, 3), dropout_rate=0.4)
+		x = VGG_v2Modules.convModule3(x, filters=512, kernel_size=(3, 3), dropout_rate=0.4)
+		x = VGG_v2Modules.convModule3(x, filters=512, kernel_size=(3, 3), dropout_rate=0.4)
 
 		x = Dropout(rate=0.5)(x)
 		x = Flatten()(x)
 
-		x = VGGModules.fcModule(x, 512, 0.5)
+		x = VGG_v2Modules.fcModule(x, 512, 0.5)
 
 		x = Dense(units=self.num_classes)(x)
 		x = Activation('softmax')(x)

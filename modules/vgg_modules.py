@@ -7,7 +7,7 @@ from keras.layers import Flatten
 from keras import backend as K
 from keras.regularizers import l2
 
-class VGGModules:
+class VGG_v2Modules:
 
 	@staticmethod
 	def convModule(x, filters, kernel_size, dropout_rate):
@@ -81,4 +81,78 @@ class VGGModules:
 		x = Activation('relu')(x)
 		x = BatchNormalization()(x)
 		x = Dropout(rate=dropout_rate)(x)
+		return x
+
+class VGGModules:
+
+	@staticmethod
+	def convModule(x, filters, kernel_size):
+		'''
+		Creates a layer of the pattern, as suggested in the original publication:
+		Conv2D -> MaxPool2D
+
+		The convolution modules are followed by a ReLU activation function.
+		'''
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			padding='same',
+			kernel_regularizer=l2(0.0005))(x)
+		x = Activation('relu')(x)
+
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		return x
+
+	@staticmethod
+	def convModule2(x, filters, kernel_size):
+		'''
+		Creates a layer of the pattern, as suggested in the original publication:
+		Conv2D -> Conv2D -> MaxPool2D
+
+		The convolution modules are followed by a ReLU activation function.
+		'''
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			kernel_regularizer=l2(0.0005),
+			padding='same')(x)
+		x = Activation('relu')(x)
+
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			kernel_regularizer=l2(0.0005),
+			padding='same')(x)
+		x = Activation('relu')(x)
+
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		return x
+
+	@staticmethod
+	def convModule3(x, filters, kernel_size):
+		'''
+		Creates a layer of the pattern, as suggested in the original publication:
+		Conv2D -> Conv2D -> Conv2D -> MaxPool2D
+
+		The convolution modules are followed by a ReLU activation function.
+		'''
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			padding='same',
+			kernel_regularizer=l2(0.0005))(x)
+
+		x = Activation('relu')(x)
+
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			padding='same',
+			kernel_regularizer=l2(0.0005))(x)
+
+		x = Activation('relu')(x)
+
+		x = Conv2D(filters=filters,
+			kernel_size=kernel_size,
+			padding='same',
+			kernel_regularizer=l2(0.0005))(x)
+
+		x = Activation('relu')(x)
+
+		x = MaxPooling2D(pool_size=(2, 2))(x)
 		return x
