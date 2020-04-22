@@ -108,8 +108,6 @@ class GoogLeNetCIFAR:
 			vertical_flip=False)
 		datagen.fit(trainX)
 
-		# def lr_scheduler(epoch):
-		# 	return learning_rate * (0.5 ** (epoch // lr_drop))
 		def lr_scheduler(epoch):
 			if epoch < 150:
 				return 1e-3
