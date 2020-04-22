@@ -26,15 +26,35 @@ This repository is dedicated to construct and train various deep architectures u
 	- [x] GoogLeNet for CIFAR-10
 	- [ ] GoogLeNet for MNIST
 	- [ ] GoogLeNet for Tiny Imagenet
+
+- [ ] ResNet [[3]]("3"), [[4]]("4")
+	- [ ] ResNet for CIFAR-10
+	- [ ] ResNet for MNIST
+	- [ ] ResNet for Tiny Imagenet
 	
 - [ ] Rank-1 and Rank-5 accuracy
+
 - [ ] Provide the notebooks
-  
+
+## Results
+
 ## References
 <a id="1">[1]</a>
 Karen Simonyan and Andrew Zisserman, (2014).
 Very Deep Convolutional Networks for Large-Scale Image Recognition.
+https://arxiv.org/abs/1409.1556
 
 <a id="2">[2]</a>
 Christian Szegedy and Wei Liu and Yangqing Jia and Pierre Sermanet and Scott Reed and Dragomir Anguelov and Dumitru Erhan and Vincent Vanhoucke and Andrew Rabinovich, (2014).
 Going Deeper with Convolutions.
+https://arxiv.org/abs/1409.4842
+
+<a id="3">[3]</a>
+Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun, (2015).
+Deep Residual Learning for Image Recognition.
+https://arxiv.org/abs/1512.03385
+
+<a id="4">[4]</a>
+Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun, (2016)
+Identity Mappings in Deep Residual Networks.
+https://arxiv.org/abs/1603.05027
