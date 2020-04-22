@@ -23,7 +23,7 @@ This repository is dedicated to construct and train various deep architectures u
 	- [ ] VGGNet for Tiny Imagenet
 
 - [ ] GoogLeNet
-	- [ ] GoogLeNet for CIFAR-10
+	- [x] GoogLeNet for CIFAR-10
 	- [ ] GoogLeNet for MNIST
 	- [ ] GoogLeNet for Tiny Imagenet
 	
