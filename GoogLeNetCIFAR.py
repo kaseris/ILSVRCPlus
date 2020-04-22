@@ -1,6 +1,7 @@
 import keras
 from keras.layers.convolutional import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.layers.core import Dense, Dropout, Activation
+from keras.layers.normalization import BatchNormalization
 from keras import backend as K
 from keras.regularizers import l2
 from keras.layers import Input, Flatten
@@ -27,44 +28,53 @@ class GoogLeNetCIFAR:
 		inputs = Input(shape=self.input_shape)
 
 		#===========================
-		x = Conv2D(filters=64,
-			kernel_size=(7, 7),
-			strides=2,
+		x = Conv2D(filters=192,
+			kernel_size=(3, 3),
+			strides=1,
 			padding='same',
 			kernel_regularizer=l2(0.0001))(inputs)
+		x = BatchNormalization()(x)
 		x = Activation('relu')(x)
-		x = MaxPooling2D(pool_size=(3, 3),
-			strides=2)(x)
-		x = LRN()(x)
+		
 		#===========================
-		x = GoogLeNetModules.Inception(x, filters=[64, (96, 128), (16, 32), 32])
-		x = GoogLeNetModules.Inception(x, filters=[128, (128, 192), (32, 96), 64])
+		x = GoogLeNetModules.Inception(x, filters=[64, (96, 128), (16, 32), 32]) # 3a
+		x = GoogLeNetModules.Inception(x, filters=[128, (128, 192), (32, 96), 64]) # 3b
 		#===========================
 		x = MaxPooling2D(pool_size=(3, 3),
 			strides=2,
 			padding='same')(x)
-		x = GoogLeNetModules.Inception(x, filters=[192, (96, 208), (16, 48), 64])
-		x = GoogLeNetModules.Inception(x, filters=[160, (112, 224), (24, 64), 64])
-		x = GoogLeNetModules.Inception(x, filters=[128, (128, 256), (24, 64), 64])
-		x = GoogLeNetModules.Inception(x, filters=[112, (144, 288), (32, 64), 64])
-		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128])
+		x = GoogLeNetModules.Inception(x, filters=[192, (96, 208), (16, 48), 64]) #4a
+		#aux1 = GoogLeNetModules.Auxillary(x, name='aux1')
+		x = GoogLeNetModules.Inception(x, filters=[160, (112, 224), (24, 64), 64]) #4b
+		x = GoogLeNetModules.Inception(x, filters=[128, (128, 256), (24, 64), 64]) #4c
+		x = GoogLeNetModules.Inception(x, filters=[112, (144, 288), (32, 64), 64]) # 4d
+		#aux2 = GoogLeNetModules.Auxillary(x, name='aux2')
+		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 4e
 		#===========================
-		x = MaxPooling2D(pool_size=(3, 3),
-			strides=2,
-			padding='same')(x)
-		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128])
-		x = GoogLeNetModules.Inception(x, filters=[384, (192, 384), (48, 128), 128])
+		# x = MaxPooling2D(pool_size=(3, 3),
+		# 	strides=2,
+		# 	padding='same')(x)
+		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 5a
+		x = GoogLeNetModules.Inception(x, filters=[384, (192, 384), (48, 128), 128]) # 5b
 		# Smaller maxpooling
-		x = AveragePooling2D(pool_size=(2, 2),
+		x = AveragePooling2D(pool_size=(8, 8),
 			strides=1,
 			padding='valid')(x)
 
-		x = Dropout(rate=0.4)(x)
+		#x = Dropout(rate=0.4)(x)
 		x = Flatten()(x)
-		x = Dense(units=self.num_classes)(x)
-		x = Activation('softmax')(x)
+		#==================================
+		# Addition
+		# x = Dense(units=1024,
+		# 	kernel_regularizer=l2(0.0005))(x)
+		# x = Dropout(rate=0.5)(x)
+		#==================================
+		x = Dense(units=self.num_classes,
+			name='main')(x)
+		main = Activation('softmax')(x)
 
-		model = Model(inputs=inputs, outputs=x, name="GoogLeNet_CIFAR-10")
+		model = Model(inputs=inputs, outputs=main, name="GoogLeNet_CIFAR-10")
+
 		return model
 
 	def train(self, learning_rate=0.1, epochs=150, batch_size=256, summary=False):
@@ -98,8 +108,16 @@ class GoogLeNetCIFAR:
 			vertical_flip=False)
 		datagen.fit(trainX)
 
+		# def lr_scheduler(epoch):
+		# 	return learning_rate * (0.5 ** (epoch // lr_drop))
 		def lr_scheduler(epoch):
-			return learning_rate * (0.5 ** (epoch // lr_drop))
+			if epoch < 150:
+				return 1e-3
+			elif epoch >= 150 or epoch <250:
+				return 5e-4
+			else:
+				return 2.5e-4
+
 		callbacks = [LearningRateScheduler(lr_scheduler)]
 
 		print("[INFO]: Compiling model")
@@ -116,8 +134,7 @@ class GoogLeNetCIFAR:
 		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
 			steps_per_epoch=trainX.shape[0] // batch_size,
 			epochs=epochs,
-			validation_data=(testX, testY),
-			callbacks=callbacks)
+			validation_data=(testX, testY))
 
 		self.model.save('CIFAR10_GoogLeNet.h5')
 		return history
