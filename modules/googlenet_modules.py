@@ -55,13 +55,13 @@ class GoogLeNetModules:
 			strides=1)(path3)
 		path3 = BatchNormalization()(path3)
 		path3 = Activation('relu')(path3)
-		path3 = Conv2D(filters=filters[2][1],
-			kernel_size=(5, 5),
-			padding=padding,
-			kernel_regularizer=l2(0.0001),
-			strides=1)(path3)
-		path3 = BatchNormalization()(path3)
-		path3 = Activation('relu')(path3)
+		# path3 = Conv2D(filters=filters[2][1],
+		# 	kernel_size=(5, 5),
+		# 	padding=padding,
+		# 	kernel_regularizer=l2(0.0001),
+		# 	strides=1)(path3)
+		# path3 = BatchNormalization()(path3)
+		# path3 = Activation('relu')(path3)
 
 		# 4th path MaxPooling -> Conv2D
 		path4 = MaxPooling2D(pool_size=(3, 3),
