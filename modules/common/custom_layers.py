@@ -1,10 +1,10 @@
-import tensorflow.keras
-from tensorflow.keras.layers import Layer
-from tensorflow.keras import backend as K
+import keras
+from keras.layers import Layer
+from keras import backend as K
 try:
-	from tensorflow.keras import initializations
+	from keras import initializations
 except:
-	from tensorflow.keras import initializers as initializations
+	from keras import initializers as initializations
 
 class LRN(Layer):
 
