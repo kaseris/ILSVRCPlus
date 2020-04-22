@@ -13,6 +13,8 @@ This repository is dedicated to construct and train various deep architectures u
   * Construct a GoogLeNet variant for training on MNIST dataset.
   * Construct a GoogLeNet variant for training on the CIFAR-10 dataset.
   * Construct the original architecture, as mentioned in [[2]]("2").
+
+* Implement a ResNet and its variants [[3]]("3"), [[4]]("4")
   
  * Report training and testing results
 
