@@ -14,7 +14,7 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import LearningRateScheduler
 
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adam
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class GoogLeNetCIFAR:
 		#===========================
 		x = Conv2D(filters=192,
 			kernel_size=(3, 3),
-			strides=1,
+			strides=2,
 			padding='same',
 			kernel_regularizer=l2(0.0001))(inputs)
 		x = BatchNormalization()(x)
@@ -119,7 +119,8 @@ class GoogLeNetCIFAR:
 		callbacks = [LearningRateScheduler(lr_scheduler)]
 
 		print("[INFO]: Compiling model")
-		optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
+		#optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
+		optimizer = Adam(learning_rate=lr_scheduler(0))
 		self.model.compile(optimizer=optimizer,
 			loss='categorical_crossentropy',
 			metrics=['accuracy'])
