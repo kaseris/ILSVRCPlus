@@ -56,7 +56,7 @@ class MiniGoogLeNetCIFAR:
 		model = Model(inputs=inputs, outputs=x, name='Mini GoogLeNet - CIFAR10')
 		return model
 
-	def train(init_lr=5e-3, epochs=200, batch_size=64):
+	def train(self, init_lr=5e-3, epochs=200, batch_size=64):
 		INIT_LR = init_lr
 
 		print("[INFO]: Downloading the dataset")
