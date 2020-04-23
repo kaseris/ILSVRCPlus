@@ -35,7 +35,6 @@ class GoogLeNetCIFAR:
 			kernel_regularizer=l2(0.0001))(inputs)
 		x = BatchNormalization()(x)
 		x = Activation('relu')(x)
-		
 		#===========================
 		x = GoogLeNetModules.Inception(x, filters=[64, (96, 128), (16, 32), 32]) # 3a
 		x = GoogLeNetModules.Inception(x, filters=[128, (128, 192), (32, 96), 64]) # 3b
@@ -110,11 +109,11 @@ class GoogLeNetCIFAR:
 
 		def lr_scheduler(epoch):
 			if epoch < 150:
-				return 1e-3
+				return 1e-2
 			elif epoch >= 150 or epoch <250:
-				return 5e-4
+				return 5e-3
 			else:
-				return 2.5e-4
+				return 1e-3
 
 		callbacks = [LearningRateScheduler(lr_scheduler)]
 
