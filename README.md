@@ -41,8 +41,9 @@ This repository is dedicated to construct and train various deep architectures u
 ## Results
 <details>
 	<summary>MNIST</summary>
-	<p>![picture alt](outputs/plots/resnet-v1n8-mnist-accuracy.png "")</p>
+	<p>![Resnet accuracy](/outputs/plots/resnet-v1n8-mnist-accuracy.png)</p>
 </details>
+
 ## Weights
 The weights for the trained models can be found under the link:
 
