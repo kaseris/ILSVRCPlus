@@ -109,10 +109,51 @@ class ResNetMNIST:
 		return model
 
 	def train(self, epochs=15, learning_rate=1e-3, batch_size=32, summary=False):
-		self.model.compile(optimizer='adam',
-			lr=lr_scheduler,
-			metrics=['accuracy'])
+		INIT_LR=learning_rate
+
+		print("[INFO]: Downloading dataset")
+		(trainX, trainY), (testX, testY) = mnist.load_data()
+		trainX = trainX.astype(np.float32)
+		testX = testX.astype(np.float32)
+
+		trainX = np.expand_dims(trainX, axis=-1)
+		testX = np.expand_dims(testX, axis=-1)
+
+		trainY = keras.utils.to_categorical(trainY, self.num_classes)
+		testY = keras.utils.to_categorical(testY, self.num_classes)
+
+		datagen = ImageDataGenerator(rescale=1.0/255.0)
+
+		print("[INFO]: Compiling model")
+		optimizer = SGD(lr=INIT_LR, momentum=0.9)
+		self.model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=optimizer)
 
 		if summary:
+			print("[INFO]: ==================MODEL SUMMARY==================")
 			self.model.summary()
+
+		def lr_scheduler(epoch):
+			maxEpochs = epochs
+			baseLR = INIT_LR
+			power = 1.0
+
+			alpha = baseLR * (1 - (epoch / float(maxEpochs))) ** power
+
+			return alpha
+
+		#======================================================
+		#Callback setup
+		filepath=r"MNISTResNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		callbacks = [LearningRateScheduler(lr_scheduler),
+					ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')]
+		#======================================================
+
+		print("[INFO]: Training model")
+		history = self.model.fit(trainX, trainY,
+			validation_data=(testX, testY),	
+			epochs=epochs,
+			verbose=1,
+			workers=2,
+			callbacks=callbacks)
+		return history
 
