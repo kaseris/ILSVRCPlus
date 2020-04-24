@@ -53,7 +53,7 @@ class ResNetMNIST:
 				x = Activation('relu')(x)
 			num_filters *= 2
 
-		x = AveragePooling2D(pool_size=8)(x)
+		x = AveragePooling2D(pool_size=7)(x)
 		y = Flatten()(x)
 		outputs = Dense(units=self.num_classes,
 			activation='softmax',
@@ -89,7 +89,7 @@ class ResNetMNIST:
 					if res_block == 0:
 						strides = 2
 
-				y = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters_out, kernel_size=1, activation=activation, batch_normalization=batch_normalization, conv_first=False)
+				y = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters_in, kernel_size=1, activation=activation, batch_normalization=batch_normalization, conv_first=False)
 				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters_in, conv_first=False)
 				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters_out, kernel_size=1, conv_first=False)
 
@@ -101,14 +101,14 @@ class ResNetMNIST:
 
 		x = BatchNormalization()(x)
 		x = Activation('relu')(x)
-		x = AveragePooling2D(pool_size=8)(x)
+		x = AveragePooling2D(pool_size=7)(x)
 		y = Flatten()(x)
 		outputs = Dense(units=self.num_classes, activation='softmax', kernel_initializer='he_normal')(y)
 
 		model = Model(inputs=inputs, outputs=outputs, name='ResNet v2 - MNIST')
 		return model
 
-	def train(epochs=15, learning_rate=1e-3, batch_size=32, summary=False):
+	def train(self, epochs=15, learning_rate=1e-3, batch_size=32, summary=False):
 		self.model.compile(optimizer='adam',
 			lr=lr_scheduler,
 			metrics=['accuracy'])
