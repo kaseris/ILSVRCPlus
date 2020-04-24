@@ -46,7 +46,7 @@ class ResNetMNIST:
 				if stack > 0 and res_block == 0:
 					strides = 2
 				y = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters, strides=strides)
-				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters, kernel_size=1, strides=strides, activation=None, batch_normalization=False)
+				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters, activation=None)
 				if stack > 0 and res_block==0:
 					x = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters, kernel_size=1, strides=strides, activation=None, batch_normalization=False)
 				x = keras.layers.add([x, y])
