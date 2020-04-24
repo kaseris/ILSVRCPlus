@@ -17,7 +17,7 @@ import os
 
 class ResNetMNIST:
 
-	def __init__(self, version=1, n=3):
+	def __init__(self, version=1, n=8):
 		self.version = version
 		self.input_shape = (28, 28, 1)
 		self.num_classes = 10

@@ -22,7 +22,7 @@ class ResNetModules:
 		padding='same',
 		kernel_initializer='he_normal',
 		kernel_regularizer=l2(1e-4))
-
+		x = input_tensor
 		if conv_first:
 			x = conv_tensor(x)
 			if batch_normalization:
