@@ -26,7 +26,7 @@ This repository is dedicated to construct and train various deep architectures u
 
 - [ ] GoogLeNet
 	- [x] GoogLeNet for CIFAR-10
-	- [ ] GoogLeNet for MNIST
+	- [x] GoogLeNet for MNIST
 	- [ ] GoogLeNet for Tiny Imagenet
 
 - [ ] ResNet [[3]]("3"), [[4]]("4")
@@ -39,6 +39,10 @@ This repository is dedicated to construct and train various deep architectures u
 - [ ] Provide the notebooks
 
 ## Results
+
+## Weights
+The weights for the trained models can be found under the link:
+https://drive.google.com/open?id=16AeENomjhIT1C3vmw1fc85xP2SSlZe5z
 
 ## References
 <a id="1">[1]</a>
