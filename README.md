@@ -41,7 +41,15 @@ This repository is dedicated to construct and train various deep architectures u
 ## Results
 <details>
 	<summary>MNIST</summary>
-	<img src="outputs/plots/resnet-v1n8-mnist-accuracy.png">
+	<p>Accuracy and loss plots for a ResNet v1 with n = 8.</p>
+	<p><img src="outputs/plots/resnet-v1n8-mnist-accuracy.png" width="400">
+	<img src="outputs/plots/resnet-v1n8-mnist-loss.png" width="400"></p>
+	<p>Accuracy and loss plots for the Mini GoogLeNet variant</p>
+	<p><img src="outputs/plots/minigooglenet-mnist-accuracy.png" width="400">
+	<img src="outputs/plots/minigooglenet-mnist-loss.png" width="400"></p>
+	<p>Learning curves of the VGG-16 variant model</p>
+	<p><img src="outputs/plots/vgg16-MNIST-accuracy.png" width="400">
+	<img src="outputs/plots/vgg16-MNIST-loss.png">></p>
 </details>
 
 ## Weights
