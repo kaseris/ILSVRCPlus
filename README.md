@@ -42,6 +42,7 @@ This repository is dedicated to construct and train various deep architectures u
 
 ## Weights
 The weights for the trained models can be found under the link:
+
 https://drive.google.com/open?id=16AeENomjhIT1C3vmw1fc85xP2SSlZe5z
 
 ## References
