@@ -49,7 +49,7 @@ This repository is dedicated to construct and train various deep architectures u
 	<img src="outputs/plots/minigooglenet-mnist-loss.png" width="400"></p>
 	<p>Learning curves of the VGG-16 variant model</p>
 	<p><img src="outputs/plots/vgg16-MNIST-accuracy.png" width="400">
-	<img src="outputs/plots/vgg16-MNIST-loss.png">></p>
+	<img src="outputs/plots/vgg16-MNIST-loss.png" width="400">></p>
 </details>
 
 ## Weights
