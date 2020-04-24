@@ -89,7 +89,7 @@ class ResNetMNIST:
 					if res_block == 0:
 						strides = 2
 
-				y = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters_in, kernel_size=1, activation=activation, batch_normalization=batch_normalization, conv_first=False)
+				y = ResNetModules.resnet_layer(input_tensor=x, num_filters=num_filters_in, strides=strides, kernel_size=1, activation=activation, batch_normalization=batch_normalization, conv_first=False)
 				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters_in, conv_first=False)
 				y = ResNetModules.resnet_layer(input_tensor=y, num_filters=num_filters_out, kernel_size=1, conv_first=False)
 
