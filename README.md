@@ -41,7 +41,7 @@ This repository is dedicated to construct and train various deep architectures u
 ## Results
 <details>
 	<summary>MNIST</summary>
-	![](outputs/plots/resnet-v1n8-mnist-accuracy.png)
+	<img src="outputs/plots/resnet-v1n8-mnist-accuracy.png">
 </details>
 
 ## Weights
