@@ -41,7 +41,7 @@ This repository is dedicated to construct and train various deep architectures u
 ## Results
 <details>
 	<summary>MNIST</summary>
-	<p>![picture alt](/outputs/plots/resnet-v1n8-mnist-accuracy.png)</p>
+	<p>!(https://github.com/kaseris/ILSVRCPlus/blob/master/outputs/plots/resnet-v1n8-mnist-accuracy.png)</p>
 </details>
 
 ## Weights
