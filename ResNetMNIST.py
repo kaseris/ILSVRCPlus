@@ -15,14 +15,15 @@ from modules.resnet_modules import ResNetModules
 import numpy as np
 import os
 
-class ResNetCIFAR:
+class ResNetMNIST:
 
 	def __init__(self, version=1, n=3):
 		self.version = version
 		self.input_shape = (28, 28, 1)
 		self.num_classes = 10
-		self.model = self.build_model()
 		self.depth = n
+		self.model = self.build_model()
+		
 
 	def build_model(self):
 		if self.version == 1:
