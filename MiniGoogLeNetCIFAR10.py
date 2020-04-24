@@ -86,7 +86,7 @@ class MiniGoogLeNetCIFAR:
 
 			return alpha
 
-		filepath=r"drive/My Drive/weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		filepath=r"weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
 		callbacks = [LearningRateScheduler(lr_scheduler),
 					ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')]
 
