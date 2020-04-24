@@ -31,7 +31,7 @@ This repository is dedicated to construct and train various deep architectures u
 
 - [ ] ResNet [[3]]("3"), [[4]]("4")
 	- [ ] ResNet for CIFAR-10
-	- [ ] ResNet for MNIST
+	- [x] ResNet for MNIST
 	- [ ] ResNet for Tiny Imagenet
 	
 - [ ] Rank-1 and Rank-5 accuracy
@@ -39,7 +39,12 @@ This repository is dedicated to construct and train various deep architectures u
 - [ ] Provide the notebooks
 
 ## Results
-
+### MNIST
+<details>
+	<summary>
+		<p>![picture alt](outputs/plots/resnet-v1n8-accuracy.png)</p>
+	</summary>
+</details>
 ## Weights
 The weights for the trained models can be found under the link:
 
