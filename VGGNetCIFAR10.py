@@ -74,7 +74,7 @@ class VGGNetCIFAR:
 
 		def lr_scheduler(epoch):
 			return learning_rate * (0.5 ** (epoch // lr_drop))
-		callbacks = [LearningRateScheduler(lr_scheduler)]
+		#callbacks = [LearningRateScheduler(lr_scheduler)]
 
 		print("[INFO]: Compiling model")
 		optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
@@ -85,6 +85,12 @@ class VGGNetCIFAR:
 		if summary:
 			print("[INFO]: ========= MODEL SUMMARY  =========")
 			self.model.summary()
+
+		filepath=r"CIFAR-VGGNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		callbacks = [ModelCheckpoint(filepath,
+			monitor='val_accuracy',
+			save_best_only=True,
+			model='max'), LearningRateScheduler(lr_scheduler)]
 
 		print("[INFO]: Training model")
 		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),

@@ -7,7 +7,7 @@ from keras import backend as K
 
 from keras.datasets import mnist
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import LearningRateScheduler
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 from keras.optimizers import SGD
 
@@ -41,7 +41,7 @@ class VGGNetMNIST:
 		x = Dense(units=self.num_classes)(x)
 		x = Activation('softmax')(x)
 
-		model = Model(inputs=inputs, outputs=x, name='MNIST_VGGNet')
+		model = Model(inputs=inputs, outputs=x, name='MNIST VGGNet')
 		return model
 
 	def train(self, learning_rate=1e-3, epochs=100, batch_size=128, summary=False):
@@ -74,12 +74,18 @@ class VGGNetMNIST:
 			print("[INFO]: ========= MODEL SUMMARY ========")
 			self.model.summary()
 
+		filepath=r"MNISTVGGNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		callbacks = [ModelCheckpoint(filepath,
+			monitor='val_accuracy',
+			save_best_only=True,
+			model='max')]
+
 		print("[INFO]: Training model")
 		history = self.model.fit(trainX, trainY,
 			epochs=epochs,
-			validation_data=(testX, testY))
+			validation_data=(testX, testY),
+			callbacks=callbacks)
 
-		self.model.save('MNIST_VGGNet.h5')
 		return history
 
 
