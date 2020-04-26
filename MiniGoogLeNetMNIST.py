@@ -33,20 +33,20 @@ class MiniGoogLeNetMNIST:
 
 		inputs = Input(shape=self.input_shape)
 
-		x = MiniGoogLeNetModules.ConvolutionalModule(inputs, num_filters=96, kernel_size=(3, 3), strides=1)
+		x = MiniGoogLeNetModules.ConvolutionalModule(inputs, num_filters=96, kernel_size=(3, 3), strides=1, batch_norm=False)
 
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=32, filters3x3=32)
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=32, filters3x3=48)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=32, filters3x3=32, batch_norm=False)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=32, filters3x3=48, batch_norm=False)
 		x = MiniGoogLeNetModules.DownsamplingModule(x, num_filters=80)
 
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=112, filters3x3=48)
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=96, filters3x3=64)
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=80, filters3x3=80)
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=48, filters3x3=96)
-		x = MiniGoogLeNetModules.DownsamplingModule(x, num_filters=96)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=112, filters3x3=48, batch_norm=False)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=96, filters3x3=64, batch_norm=False)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=80, filters3x3=80, batch_norm=False)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=48, filters3x3=96, batch_norm=False)
+		x = MiniGoogLeNetModules.DownsamplingModule(x, num_filters=96, batch_norm=False)
 
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=176, filters3x3=160)
-		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=176, filters3x3=160)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=176, filters3x3=160, batch_norm=False)
+		x = MiniGoogLeNetModules.InceptionModule(x, filters1x1=176, filters3x3=160, batch_norm=False)
 		x = AveragePooling2D(pool_size=(6, 6))(x)
 
 		x = Dropout(rate=0.6)(x)
@@ -64,13 +64,16 @@ class MiniGoogLeNetMNIST:
 		trainX = trainX.astype(np.float32)
 		testX = testX.astype(np.float32)
 
+		trainX = trainX / 255.0
+		testX = testX / 255.0
+
 		trainX = np.expand_dims(trainX, axis=-1)
 		testX = np.expand_dims(testX, axis=-1)
 
 		trainY = keras.utils.to_categorical(trainY, self.num_classes)
 		testY = keras.utils.to_categorical(testY, self.num_classes)
 
-		datagen = ImageDataGenerator(rescale=1.0/255.0)
+		#datagen = ImageDataGenerator(rescale=1.0/255.0)
 
 		print("[INFO]: Compiling model")
 		optimizer = SGD(lr=INIT_LR, momentum=0.9)
