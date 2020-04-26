@@ -73,12 +73,12 @@ class VGGNetMNIST:
 		if summary:
 			print("[INFO]: ========= MODEL SUMMARY ========")
 			self.model.summary()
-
+		
 		filepath=r"MNISTVGGNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
 		callbacks = [ModelCheckpoint(filepath,
 			monitor='val_accuracy',
 			save_best_only=True,
-			model='max')]
+			mode='max')]
 
 		print("[INFO]: Training model")
 		history = self.model.fit(trainX, trainY,

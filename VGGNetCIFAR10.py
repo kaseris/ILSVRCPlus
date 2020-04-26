@@ -90,7 +90,7 @@ class VGGNetCIFAR:
 		callbacks = [ModelCheckpoint(filepath,
 			monitor='val_accuracy',
 			save_best_only=True,
-			model='max'), LearningRateScheduler(lr_scheduler)]
+			mode='max'), LearningRateScheduler(lr_scheduler)]
 
 		print("[INFO]: Training model")
 		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
