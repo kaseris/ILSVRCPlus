@@ -6,7 +6,7 @@ from modules.vgg_modules import VGG_v2Modules
 from keras import backend as K
 
 from keras.datasets import cifar10
-from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator, ModelCheckpoint
 from keras.callbacks import LearningRateScheduler
 
 from keras.optimizers import SGD
