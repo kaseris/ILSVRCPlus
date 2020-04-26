@@ -24,14 +24,14 @@ class MiniGoogLeNetModules:
 
 	@staticmethod
 	def InceptionModule(x, filters1x1, filters3x3, axis=-1, batch_norm=True):
-		conv1x1 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=filters1x1, kernel_size=(1, 1), strides=1, axis=-1, batch_norm)
-		conv3x3 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=filters1x1, kernel_size=(3, 3), strides=1, axis=-1, batch_norm)
+		conv1x1 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=filters1x1, kernel_size=(1, 1), strides=1, axis=-1, batch_norm=batch_norm)
+		conv3x3 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=filters1x1, kernel_size=(3, 3), strides=1, axis=-1, batch_norm=batch_norm)
 		x = concatenate([conv1x1, conv3x3], axis=-1)
 		return x
 
 	@staticmethod
 	def DownsamplingModule(x, num_filters, batch_norm=True):
-		conv3x3 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=num_filters, kernel_size=(3,3), strides=2, padding='valid', batch_norm)
+		conv3x3 = MiniGoogLeNetModules.ConvolutionalModule(x, num_filters=num_filters, kernel_size=(3,3), strides=2, padding='valid', batch_norm=batch_norm)
 		pool = MaxPooling2D(pool_size=(3, 3), strides=2)(x)
 		x = concatenate([conv3x3, pool], axis=-1)
 		return x
