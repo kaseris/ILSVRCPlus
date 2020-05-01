@@ -12,7 +12,7 @@ from modules.common.custom_layers import LRN
 
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import LearningRateScheduler
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 from keras.optimizers import SGD, Adam
 
@@ -115,7 +115,9 @@ class GoogLeNetCIFAR:
 			else:
 				return 1e-3
 
-		callbacks = [LearningRateScheduler(lr_scheduler)]
+		filepath=r"GoogLeNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		callbacks = [LearningRateScheduler(lr_scheduler),
+		ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')]
 
 		print("[INFO]: Compiling model")
 		#optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
