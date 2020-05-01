@@ -76,7 +76,7 @@ class GoogLeNetCIFAR:
 
 		return model
 
-	def train(self, learning_rate=0.1, epochs=150, batch_size=256, summary=False):
+	def train(self, learning_rate=1e-3, epochs=200, batch_size=64, summary=False):
 		lr_drop=20
 		lr_decay = 1e-6
 		# Download the dataset
