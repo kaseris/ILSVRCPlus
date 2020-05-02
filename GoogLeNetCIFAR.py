@@ -28,20 +28,39 @@ class GoogLeNetCIFAR:
 		inputs = Input(shape=self.input_shape)
 
 		#===========================
-		x = Conv2D(filters=192,
-			kernel_size=(3, 3),
+		x = Conv2D(filters=64,
+			kernel_size=(7, 7),
 			strides=2,
 			padding='same',
-			kernel_regularizer=l2(0.0001))(inputs)
-		x = BatchNormalization()(x)
+			kernel_regularizer=l2(0.0001))(inputs) # 16x16
 		x = Activation('relu')(x)
+		x = MaxPooling2D(pool_size=(3, 3),
+			strides=2,
+			padding='same')(x) # 8x8
+		x = BatchNormalization()(x)
+
+		# Stage 2
+		x = Conv2D(filters=64,
+			kernel_size=(1, 1),
+			strides=1,
+			padding='same',
+			kernel_regularizer=l2(0.0001))(x)
+		x = Conv2D(filters=192,
+			kernel_size=(3, 3),
+			strides=1,
+			padding='same',
+			kernel_regularizer=l2(1e-4))(x)
+		x = BatchNormalization()(x)
+		x = MaxPooling2D(pool_size=(3, 3),
+			strides=2,
+			padding='same')(x) #4x4
 		#===========================
 		x = GoogLeNetModules.Inception(x, filters=[64, (96, 128), (16, 32), 32]) # 3a
 		x = GoogLeNetModules.Inception(x, filters=[128, (128, 192), (32, 96), 64]) # 3b
 		#===========================
 		x = MaxPooling2D(pool_size=(3, 3),
 			strides=2,
-			padding='same')(x)
+			padding='same')(x) #2x2
 		x = GoogLeNetModules.Inception(x, filters=[192, (96, 208), (16, 48), 64]) #4a
 		aux1 = GoogLeNetModules.Auxillary(x, name='aux1')
 		x = GoogLeNetModules.Inception(x, filters=[160, (112, 224), (24, 64), 64]) #4b
@@ -50,13 +69,13 @@ class GoogLeNetCIFAR:
 		aux2 = GoogLeNetModules.Auxillary(x, name='aux2')
 		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 4e
 		#===========================
-		x = MaxPooling2D(pool_size=(3, 3),
-			strides=2,
+		x = MaxPooling2D(pool_size=(2, 2),
+			strides=1,
 			padding='same')(x)
 		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 5a
 		x = GoogLeNetModules.Inception(x, filters=[384, (192, 384), (48, 128), 128]) # 5b
 		# Smaller avgpooling
-		x = AveragePooling2D(pool_size=(4, 4),
+		x = AveragePooling2D(pool_size=(2, 2),
 			strides=1,
 			padding='valid')(x)
 
@@ -108,7 +127,7 @@ class GoogLeNetCIFAR:
 			else:
 				return 1e-4
 
-		filepath=r"GoogLeNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		filepath=r"GoogLeNet-weights-improvement-{epoch:02d}-{val_main_accuracy:.2f}.hdf5"
 		callbacks = [LearningRateScheduler(lr_scheduler),
 		ModelCheckpoint(filepath, monitor='val_main_accuracy', save_best_only=True, mode='max')]
 

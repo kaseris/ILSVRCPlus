@@ -77,7 +77,7 @@ class GoogLeNetModules:
 
 	@staticmethod
 	def Auxillary(x, num_classes=10, name=None):
-		x = AveragePooling2D(pool_size=(4, 4),
+		x = AveragePooling2D(pool_size=(2, 2),
 			padding='valid',
 			strides=1)(x)
 		x = Conv2D(filters=128,
