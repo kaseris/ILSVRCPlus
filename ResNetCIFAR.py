@@ -139,6 +139,7 @@ class ResNetCIFAR:
 		print("[INFO]: Compiling model...")
 		self.model.compile(optimizer='adam',
 			lr=lr_scheduler(0),
+			loss='categorical_crossentropy',
 			metrics=['accuracy'])
 
 		if summary:
@@ -169,6 +170,7 @@ class ResNetCIFAR:
 			data_format=None,
 			)
 		datagen.fit(trainX)
+
 		print("[INFO]: Training model")
 		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
 			validation_data=(testX, testY),
