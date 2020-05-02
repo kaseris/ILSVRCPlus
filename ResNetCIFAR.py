@@ -71,7 +71,7 @@ class ResNetCIFAR:
 		num_res_blocks = int((self.depth - 2) / 9)
 
 		for stage in range(3):
-			for res_block in num_res_blocks:
+			for res_block in range(num_res_blocks):
 				activation = 'relu'
 				batch_normalization = True
 				strides = 1
@@ -133,7 +133,7 @@ class ResNetCIFAR:
 
 		print("[INFO]: Compiling model...")
 		self.model.compile(optimizer='adam',
-			lr=lr_scheduler,
+			lr=lr_scheduler(0),
 			metrics=['accuracy'])
 
 		if summary:
