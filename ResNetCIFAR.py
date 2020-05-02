@@ -21,8 +21,9 @@ class ResNetCIFAR:
 		self.version = version
 		self.input_shape = (32, 32, 3)
 		self.num_classes = 10
-		self.model = self.build_model()
 		self.depth = n
+		self.model = self.build_model()
+		
 
 	def build_model(self):
 		if self.version == 1:
@@ -171,6 +172,6 @@ class ResNetCIFAR:
 			workers=4,
 			callbacks=callbacks,
 			steps_per_epoch=trainX.shape[0]//batch_size)
-		
+
 		return history
 
