@@ -70,7 +70,7 @@ class GoogLeNetCIFAR:
 		#==================================
 		x = Dense(units=self.num_classes,
 			name='main')(x)
-		main = Activation('softmax')(x)
+		main = Activation('softmax', name='main')(x)
 
 		model = Model(inputs=inputs, outputs=[main, aux1, aux2], name="GoogLeNet_CIFAR-10")
 
@@ -111,14 +111,14 @@ class GoogLeNetCIFAR:
 
 		filepath=r"GoogLeNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
 		callbacks = [LearningRateScheduler(lr_scheduler),
-		ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')]
+		ModelCheckpoint(filepath, monitor='val_main_accuracy', save_best_only=True, mode='max')]
 
 		print("[INFO]: Compiling model")
 		optimizer = SGD(lr=lr_scheduler(0), momentum=0.9, nesterov=True)
 		#optimizer = Adam(learning_rate=lr_scheduler(0))
 		self.model.compile(optimizer=optimizer,
 			loss='categorical_crossentropy',
-			loss_weights = {'activation_53': 1.0, 'activation_19': 0.3, 'activation_37': 0.3},
+			loss_weights = {'main': 1.0, 'aux1': 0.3, 'aux2': 0.3},
 			metrics=['accuracy'])
 
 		if summary:
