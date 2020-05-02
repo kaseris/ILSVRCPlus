@@ -110,7 +110,7 @@ class ResNetCIFAR:
 		model = Model(inputs=inputs, outputs=outputs, name='ResNet v2 - CIFAR10')
 		return model
 
-	def train(epochs=200, batch_size=32, summary=False):
+	def train(self, epochs=200, batch_size=32, summary=False):
 		print("[INFO]: Downloading dataset")
 		(trainX, trainY), (testX, testY) = cifar10.load_data()
 		trainX = trainX.astype(np.float32) / 255.
