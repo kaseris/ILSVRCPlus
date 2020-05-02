@@ -11,6 +11,7 @@ from keras.models import Model
 from keras.datasets import cifar10
 
 from modules.resnet_modules import ResNetModules
+from keras.optimizers import Adam
 
 import numpy as np
 import os
@@ -137,8 +138,7 @@ class ResNetCIFAR:
 			return lr
 
 		print("[INFO]: Compiling model...")
-		self.model.compile(optimizer='adam',
-			lr=lr_scheduler(0),
+		self.model.compile(optimizer=Adam(learning_rate=lr_scheduler(0))
 			loss='categorical_crossentropy',
 			metrics=['accuracy'])
 
