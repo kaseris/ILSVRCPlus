@@ -127,7 +127,7 @@ class GoogLeNetCIFAR:
 
 		print("[INFO]: Training model")
 		history = self.model.fit(trainX, [trainY, trainY, trainY],
-			batch_size=batch_size
+			batch_size=batch_size,
 			steps_per_epoch=trainX.shape[0] // batch_size,
 			epochs=epochs,
 			validation_data=(testX, [testY, testY, testY]),
