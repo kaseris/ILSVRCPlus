@@ -55,7 +55,7 @@ class GoogLeNetCIFAR:
 			padding='same')(x)
 		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 5a
 		x = GoogLeNetModules.Inception(x, filters=[384, (192, 384), (48, 128), 128]) # 5b
-		# Smaller maxpooling
+		# Smaller avgpooling
 		x = AveragePooling2D(pool_size=(4, 4),
 			strides=1,
 			padding='valid')(x)
@@ -76,7 +76,7 @@ class GoogLeNetCIFAR:
 
 		return model
 
-	def train(self, learning_rate=1e-3, epochs=200, batch_size=512, summary=False):
+	def train(self, learning_rate=1e-3, epochs=200, batch_size=256, summary=False):
 		lr_drop=20
 		lr_decay = 1e-6
 		# Download the dataset
@@ -95,11 +95,11 @@ class GoogLeNetCIFAR:
 		trainY = keras.utils.to_categorical(trainY, 10)
 		testY = keras.utils.to_categorical(testY, 10)
 
-		datagen = ImageDataGenerator(width_shift_range = 0.1,
-			height_shift_range = 0.1,
-			horizontal_flip = True,
-			fill_mode = "nearest")
-		datagen.fit(trainX)
+		# datagen = ImageDataGenerator(width_shift_range = 0.1,
+		# 	height_shift_range = 0.1,
+		# 	horizontal_flip = True,
+		# 	fill_mode = "nearest")
+		# datagen.fit(trainX)
 
 		def lr_scheduler(epoch):
 			if epoch < 150:
@@ -114,10 +114,11 @@ class GoogLeNetCIFAR:
 		ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')]
 
 		print("[INFO]: Compiling model")
-		#optimizer = SGD(lr=learning_rate, momentum=0.9, nesterov=True)
-		optimizer = Adam(learning_rate=lr_scheduler(0))
+		optimizer = SGD(lr=lr_scheduler(0), momentum=0.9, nesterov=True)
+		#optimizer = Adam(learning_rate=lr_scheduler(0))
 		self.model.compile(optimizer=optimizer,
 			loss='categorical_crossentropy',
+			loss_weights = {'main': 1.0, 'aux1': 0.3, 'aux2': 0.3},
 			metrics=['accuracy'])
 
 		if summary:
@@ -125,7 +126,8 @@ class GoogLeNetCIFAR:
 			self.model.summary()
 
 		print("[INFO]: Training model")
-		history = self.model.fit_generator(datagen.flow(trainX, [trainY, trainY, trainY], batch_size=batch_size),
+		history = self.model.fit(trainX, [trainY, trainY, trainY],
+			batch_size=batch_size
 			steps_per_epoch=trainX.shape[0] // batch_size,
 			epochs=epochs,
 			validation_data=(testX, [testY, testY, testY]),
