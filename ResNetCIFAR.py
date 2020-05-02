@@ -69,6 +69,11 @@ class ResNetCIFAR:
 
 		num_filters_in = 16
 		num_res_blocks = int((self.depth - 2) / 9)
+		inputs = Input(input_shape=self.input_shape)
+
+		x = ResNetModules.resnet_layer(inputs=inputs,
+			num_filters=num_filters_in,
+			conv_first=True)
 
 		for stage in range(3):
 			for res_block in range(num_res_blocks):
