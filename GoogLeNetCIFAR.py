@@ -101,17 +101,38 @@ class GoogLeNetCIFAR:
 		print("[INFO]: Downloading the dataset")
 		(trainX, trainY), (testX, testY) = cifar10.load_data()
 
-		# Normalise the dataset
 		trainX = trainX.astype(np.float32)
 		testX = testX.astype(np.float32)
 
-		mean = np.mean(trainX, axis=0)
-		
-		trainX = (trainX - mean)
-		testX = (testX - mean)
-
 		trainY = keras.utils.to_categorical(trainY, 10)
 		testY = keras.utils.to_categorical(testY, 10)
+
+		train_datagen = ImageDataGenerator(rescale=1. / 255,
+			shear_range=0.2,
+			zoom_range=0.2,
+			horizontal_flip=True,
+			validation_split=0.2,
+			rotation_range=15)
+
+		train_datagen.fit(trainX)
+
+		def multi_gen(datagen, batch_size, subset):
+			gen = train_datagen.flow(trainX, trainY, batch_size,
+				subset=subset)
+
+			while True:
+				gnext = gen.next()
+				yield gnext[0], [gnext[1], gnext[1], gnext[1]]
+
+		train_data_generator = multi_gen(train_datagen, batch_size, 'training')
+		val_data_generator = multi_gen(train_datagen, batch_size, 'validation')
+		train_samples = int(0.8 * trainX.shape[0])
+		val_samples = int(0.2 * trainX.shape[0])
+
+		# mean = np.mean(trainX, axis=0)
+		
+		# trainX = (trainX - mean)
+		# testX = (testX - mean)
 
 		# datagen = ImageDataGenerator(width_shift_range = 0.1,
 		# 	height_shift_range = 0.1,
@@ -144,10 +165,11 @@ class GoogLeNetCIFAR:
 			self.model.summary()
 
 		print("[INFO]: Training model")
-		history = self.model.fit(trainX, [trainY, trainY, trainY],
-			batch_size=batch_size,
+		history = self.model.fit_generator(train_data_generator,
 			epochs=epochs,
-			validation_data=(testX, [testY, testY, testY]),
+			steps_per_epoch=train_samples//batch_size,
+			validation_data=val_data_generator,
+			validation_steps=val_samples//batch_size,
 			callbacks=callbacks)
 
 		self.model.save('CIFAR10_GoogLeNet.h5')
