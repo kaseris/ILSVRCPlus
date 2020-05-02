@@ -105,10 +105,72 @@ class ResNetCIFAR:
 		return model
 
 	def train(epochs=200, batch_size=32, summary=False):
+		print("[INFO]: Downloading dataset")
+		(trainX, trainY), (testX, testY) = cifar10.load_data()
+		trainX = trainX.astype(np.float32) / 255.
+		testX = testX.astype(np.float32) / 255.
+
+		mean = np.mean(trainX, axis=0)
+		trainX -= mean
+		testX -= mean
+
+		trainY = keras.utils.to_categorical(trainY, self.num_classes)
+		testY = keras.utils.to_categorical(testY, self.num_classes)
+
+		def lr_scheduler(epoch):
+			lr = 1e-3
+			if epoch > 180:
+				lr *= 0.5e-3
+			elif epoch > 160:
+				lr *= 1e-3
+			elif epoch > 120:
+				lr *= 1e-2
+			elif epoch > 80:
+				lr *= 1e-1
+			print('Learning rate: ', lr)
+			return lr
+
+		print("[INFO]: Compiling model...")
 		self.model.compile(optimizer='adam',
 			lr=lr_scheduler,
 			metrics=['accuracy'])
 
 		if summary:
 			self.model.summary()
+
+		filepath=r"ResNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+		checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', save_best_only=True, mode='max')
+		callbacks = [LearningRateScheduler(lr_scheduler), checkpoint]
+
+		datagen = ImageDataGenerator(featurewise_center=False,
+			samplewise_center=False,
+			featurewise_std_normalization=False,
+			samplewise_std_normalization=False,
+			zca_whitening=False,
+			zca_epsilon=False,
+			rotation_range=0,
+			width_shift_range=0.1,
+			height_shift_range=0.1,
+			shear_range=0.0,
+			zoom_range=0.0,
+			channel_shift_range=0,
+			fill_mode='nearest',
+			cval=0,
+			horizontal_flip=True,
+			vertical_flip=False,
+			rescale=None,
+			preprocessing_function=None,
+			data_format=None,
+			)
+		datagen.fit(trainX)
+		print("[INFO]: Training model")
+		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
+			validation_data=(testX, testY),
+			epochs=epochs,
+			verbose=1,
+			workers=4,
+			callbacks=callbacks,
+			steps_per_epoch=trainX.shape[0]//batch_size)
+		
+		return history
 
