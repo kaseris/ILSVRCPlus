@@ -71,7 +71,7 @@ class ResNetCIFAR:
 		num_res_blocks = int((self.depth - 2) / 9)
 		inputs = Input(shape=self.input_shape)
 
-		x = ResNetModules.resnet_layer(inputs=inputs,
+		x = ResNetModules.resnet_layer(input_tensor=inputs,
 			num_filters=num_filters_in,
 			conv_first=True)
 
