@@ -21,7 +21,7 @@ class GoogLeNetModules:
 			padding=padding,
 			kernel_regularizer=l2(0.0001),
 			strides=1)(input_tensor)
-		#path1 = BatchNormalization()(path1)
+		path1 = BatchNormalization()(path1)
 		path1 = Activation('relu')(path1)
 
 		# 2nd path 1x1 -> 3x3
@@ -30,14 +30,14 @@ class GoogLeNetModules:
 			padding=padding,
 			kernel_regularizer=l2(0.0001),
 			strides=1)(input_tensor)
-		#path2 = BatchNormalization()(path2)
+		path2 = BatchNormalization()(path2)
 		path2 = Activation('relu')(path2)
 		path2 = Conv2D(filters=filters[1][1],
 			kernel_size=(3, 3),
 			padding=padding,
 			kernel_regularizer=l2(0.0001),
 			strides=1)(path2)
-		#path2 = BatchNormalization()(path2)
+		path2 = BatchNormalization()(path2)
 		path2 = Activation('relu')(path2)
 
 		# 3rd path 1x1 -> 5x5
@@ -46,14 +46,14 @@ class GoogLeNetModules:
 			padding=padding,
 			kernel_regularizer=l2(0.0001),
 			strides=1)(input_tensor)
-		#path3 = BatchNormalization()(path3)
+		path3 = BatchNormalization()(path3)
 		path3 = Activation('relu')(path3)
 		path3 = Conv2D(filters=filters[2][1],
 			kernel_size=(5, 5),
 			padding=padding,
 			kernel_regularizer=l2(0.0001),
 			strides=1)(path3)
-		#path3 = BatchNormalization()(path3)
+		path3 = BatchNormalization()(path3)
 		path3 = Activation('relu')(path3)
 		# path3 = Conv2D(filters=filters[2][1],
 		# 	kernel_size=(5, 5),
@@ -67,7 +67,7 @@ class GoogLeNetModules:
 		path4 = MaxPooling2D(pool_size=(3, 3),
 			padding=padding,
 			strides=1)(input_tensor)
-		#path4 = BatchNormalization()(path4)
+		path4 = BatchNormalization()(path4)
 		path4 = Conv2D(filters=filters[3],
 			kernel_size=(1, 1),
 			padding=padding,
