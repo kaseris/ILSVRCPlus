@@ -118,7 +118,7 @@ class GoogLeNetCIFAR:
 		#optimizer = Adam(learning_rate=lr_scheduler(0))
 		self.model.compile(optimizer=optimizer,
 			loss='categorical_crossentropy',
-			loss_weights = {'main': 1.0, 'aux1': 0.3, 'aux2': 0.3},
+			loss_weights = {'activation_53': 1.0, 'activation_19': 0.3, 'activation_37': 0.3},
 			metrics=['accuracy'])
 
 		if summary:
