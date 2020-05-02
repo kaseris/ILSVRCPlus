@@ -138,7 +138,7 @@ class ResNetCIFAR:
 			return lr
 
 		print("[INFO]: Compiling model...")
-		self.model.compile(optimizer=Adam(learning_rate=lr_scheduler(0))
+		self.model.compile(optimizer=Adam(learning_rate=lr_scheduler(0)),
 			loss='categorical_crossentropy',
 			metrics=['accuracy'])
 
