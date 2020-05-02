@@ -43,24 +43,24 @@ class GoogLeNetCIFAR:
 			strides=2,
 			padding='same')(x)
 		x = GoogLeNetModules.Inception(x, filters=[192, (96, 208), (16, 48), 64]) #4a
-		#aux1 = GoogLeNetModules.Auxillary(x, name='aux1')
+		aux1 = GoogLeNetModules.Auxillary(x, name='aux1')
 		x = GoogLeNetModules.Inception(x, filters=[160, (112, 224), (24, 64), 64]) #4b
 		x = GoogLeNetModules.Inception(x, filters=[128, (128, 256), (24, 64), 64]) #4c
 		x = GoogLeNetModules.Inception(x, filters=[112, (144, 288), (32, 64), 64]) # 4d
-		#aux2 = GoogLeNetModules.Auxillary(x, name='aux2')
+		aux2 = GoogLeNetModules.Auxillary(x, name='aux2')
 		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 4e
 		#===========================
-		# x = MaxPooling2D(pool_size=(3, 3),
-		# 	strides=2,
-		# 	padding='same')(x)
+		x = MaxPooling2D(pool_size=(3, 3),
+			strides=2,
+			padding='same')(x)
 		x = GoogLeNetModules.Inception(x, filters=[256, (160, 320), (32, 128), 128]) # 5a
 		x = GoogLeNetModules.Inception(x, filters=[384, (192, 384), (48, 128), 128]) # 5b
 		# Smaller maxpooling
-		x = AveragePooling2D(pool_size=(8, 8),
+		x = AveragePooling2D(pool_size=(4, 4),
 			strides=1,
 			padding='valid')(x)
 
-		#x = Dropout(rate=0.4)(x)
+		x = Dropout(rate=0.4)(x)
 		x = Flatten()(x)
 		#==================================
 		# Addition
@@ -72,11 +72,11 @@ class GoogLeNetCIFAR:
 			name='main')(x)
 		main = Activation('softmax')(x)
 
-		model = Model(inputs=inputs, outputs=main, name="GoogLeNet_CIFAR-10")
+		model = Model(inputs=inputs, outputs=[main, aux1, aux2], name="GoogLeNet_CIFAR-10")
 
 		return model
 
-	def train(self, learning_rate=1e-3, epochs=200, batch_size=64, summary=False):
+	def train(self, learning_rate=1e-3, epochs=200, batch_size=512, summary=False):
 		lr_drop=20
 		lr_decay = 1e-6
 		# Download the dataset
@@ -87,33 +87,27 @@ class GoogLeNetCIFAR:
 		trainX = trainX.astype(np.float32)
 		testX = testX.astype(np.float32)
 
-		mean = np.mean(trainX, axis=(0, 1, 2, 3))
-		std = np.std(trainX, axis=(0, 1, 2, 3))
-		trainX = (trainX - mean) / (std + 1e-7)
-		testX = (testX - mean) / (std + 1e-7)
+		mean = np.mean(trainX, axis=0)
+		
+		trainX = (trainX - mean)
+		testX = (testX - mean)
 
 		trainY = keras.utils.to_categorical(trainY, 10)
 		testY = keras.utils.to_categorical(testY, 10)
 
-		datagen = ImageDataGenerator(featurewise_center=False,
-			samplewise_center=False,
-			featurewise_std_normalization=False,
-			samplewise_std_normalization=False,
-			zca_whitening=False,
-			rotation_range=15,
-			width_shift_range=0.1,
-			height_shift_range=0.1,
-			horizontal_flip=True,
-			vertical_flip=False)
+		datagen = ImageDataGenerator(width_shift_range = 0.1,
+			height_shift_range = 0.1,
+			horizontal_flip = True,
+			fill_mode = "nearest")
 		datagen.fit(trainX)
 
 		def lr_scheduler(epoch):
 			if epoch < 150:
-				return 1e-2
-			elif epoch >= 150 or epoch <250:
-				return 5e-3
-			else:
 				return 1e-3
+			elif epoch >= 150 or epoch <250:
+				return 5e-4
+			else:
+				return 1e-4
 
 		filepath=r"GoogLeNet-weights-improvement-{epoch:02d}-{val_accuracy:.2f}.hdf5"
 		callbacks = [LearningRateScheduler(lr_scheduler),
@@ -131,10 +125,11 @@ class GoogLeNetCIFAR:
 			self.model.summary()
 
 		print("[INFO]: Training model")
-		history = self.model.fit_generator(datagen.flow(trainX, trainY, batch_size=batch_size),
+		history = self.model.fit_generator(datagen.flow(trainX, [trainY, trainY, trainY], batch_size=batch_size),
 			steps_per_epoch=trainX.shape[0] // batch_size,
 			epochs=epochs,
-			validation_data=(testX, testY))
+			validation_data=(testX, [testY, testY, testY]),
+			callbacks=callbacks)
 
 		self.model.save('CIFAR10_GoogLeNet.h5')
 		return history
