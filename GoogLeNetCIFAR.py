@@ -45,12 +45,14 @@ class GoogLeNetCIFAR:
 			strides=1,
 			padding='same',
 			kernel_regularizer=l2(0.0001))(x)
+		x = Activation('relu')(x)
 		x = Conv2D(filters=192,
 			kernel_size=(3, 3),
 			strides=1,
 			padding='same',
 			kernel_regularizer=l2(1e-4))(x)
 		x = BatchNormalization()(x)
+		x = Activation('relu')(x)
 		x = MaxPooling2D(pool_size=(3, 3),
 			strides=2,
 			padding='same')(x) #4x4
