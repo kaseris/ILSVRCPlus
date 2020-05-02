@@ -93,9 +93,8 @@ class GoogLeNetModules:
 		x = Activation('relu')(x)
 		x = Dropout(rate=0.7)(x)
 		x = Dense(units=num_classes,
-			kernel_regularizer=l2(0.0005),
-			name=name)(x)
-		x = Activation('softmax')(x)
+			kernel_regularizer=l2(0.0005))(x)
+		x = Activation('softmax', name=name)(x)
 		return x
 
 

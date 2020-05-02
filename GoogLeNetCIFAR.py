@@ -68,8 +68,7 @@ class GoogLeNetCIFAR:
 		# 	kernel_regularizer=l2(0.0005))(x)
 		# x = Dropout(rate=0.5)(x)
 		#==================================
-		x = Dense(units=self.num_classes,
-			name='main')(x)
+		x = Dense(units=self.num_classes)(x)
 		main = Activation('softmax', name='main')(x)
 
 		model = Model(inputs=inputs, outputs=[main, aux1, aux2], name="GoogLeNet_CIFAR-10")
