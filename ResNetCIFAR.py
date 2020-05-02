@@ -175,8 +175,7 @@ class ResNetCIFAR:
 			epochs=epochs,
 			verbose=1,
 			workers=4,
-			callbacks=callbacks,
-			steps_per_epoch=trainX.shape[0]//batch_size)
+			callbacks=callbacks)
 
 		return history
 
