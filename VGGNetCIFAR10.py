@@ -35,10 +35,10 @@ class VGGNetCIFAR:
 
 		x = Flatten()(x)
 		x = Dense(units=4096,
-			kernel_regularizer=l2(1e-4))(x)
+			kernel_regularizer=keras.regularizers.l2(1e-4))(x)
 		x = Activation('relu')(x)
 		x = Dense(units=4096,
-			kernel_regularizer=l2(1e-4))(x)
+			kernel_regularizer=keras.regularizers.l2(1e-4))(x)
 		x = Activation('relu')(x)
 		x = Dense(units=self.num_classes)(x)
 		x = Activation('softmax')(x)
