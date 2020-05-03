@@ -2,7 +2,7 @@ import keras
 from keras.layers import Input, Flatten
 from keras.layers.core import Dropout, Activation, Dense
 from keras.models import Model
-from modules.vgg_modules import VGG_v2Modules
+from modules.vgg_modules import VGG_v2Modules, VGGModules
 from keras import backend as K
 
 from keras.datasets import cifar10
@@ -15,10 +15,36 @@ import numpy as np
 
 class VGGNetCIFAR:
 
-	def __init__(self):
+	def __init__(self, original=False):
 		self.input_shape = (32, 32, 3)
 		self.num_classes = 10
-		self.model = self.build_model()
+		if original:
+			self.model = self.build_original_model()
+		else:
+			self.model = self.build_model()
+
+	def build_original_model(self):
+		inputs_shape = self.input_shape
+		inputs = Input(shape=inputs_shape)
+
+		x = VGGModules.convModule2(inputs, filters=64, kernel_size=(3, 3))
+		x = VGGModules.convModule2(x, filters=128, kernel_size=(3, 3))
+		x = VGGModules.convModule3(x, filters=256, kernel_size=(3, 3))
+		x = VGGModules.convModule3(x, filters=512, kernel_size=(3, 3))
+		x = VGGModules.convModule3(x, filters=512, kernel_size=(3, 3))
+
+		x = Flatten()(x)
+		x = Dense(units=4096,
+			kernel_regularizer=l2(1e-4))(x)
+		x = Activation('relu')(x)
+		x = Dense(units=4096,
+			kernel_regularizer=l2(1e-4))(x)
+		x = Activation('relu')(x)
+		x = Dense(units=self.num_classes)(x)
+		x = Activation('softmax')(x)
+		model = Model(inputs=inputs, outputs=x, name='CIFAR10 - VGG16 Original')
+		return model
+
 
 	def build_model(self):
 		inputs_shape = self.input_shape
