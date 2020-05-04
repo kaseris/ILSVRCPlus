@@ -11,6 +11,7 @@ from keras.models import Model
 from keras.datasets import mnist
 
 from modules.resnet_modules import ResNetModules
+from keras.optimizers import SGD
 
 import numpy as np
 import os
